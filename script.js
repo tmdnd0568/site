@@ -4,6 +4,7 @@
   const heroSticky = document.getElementById('heroSticky');
   const heroCopy = document.getElementById('heroCopy');
   const scrollCue = document.getElementById('scrollCue');
+  const heroEndReveal = document.getElementById('heroEndReveal');
 
   /* ---------- Canvas Scroll Scrubbing Engine ---------- */
   const heroCanvas = document.getElementById('heroCanvas');
@@ -92,56 +93,35 @@
   window.addEventListener('resize', resizeCanvas, { passive: true });
   resizeCanvas();
 
-  const scene = document.getElementById('scene');
-  const sun = document.getElementById('sun');
-  const sunCore = document.getElementById('sunCore');
-  const clouds = document.getElementById('clouds');
-  const skylineFar = document.getElementById('skylineFar');
-  const street = document.getElementById('street');
-  const walker = document.getElementById('walker');
-  const legL = document.getElementById('legL');
-  const legR = document.getElementById('legR');
-  const armL = document.getElementById('armL');
-  const armR = document.getElementById('armR');
-  const phoneReveal = document.getElementById('phoneReveal');
-  const skyStop1 = document.getElementById('skyStop1');
-  const skyStop2 = document.getElementById('skyStop2');
-  const windows = document.getElementById('windows');
-
-  const reduceMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
-
   const clamp = (v, min, max) => Math.min(max, Math.max(min, v));
   const lerp = (a, b, t) => a + (b - a) * t;
 
-  const milestoneText = document.getElementById('milestoneText');
-
   /* ---------- scroll-scrubbed sequence ---------- */
   function renderScene(p){
-    const targetIndex = clamp(Math.floor(p * (frameCount - 1)), 0, frameCount - 1);
+    const scrubP = clamp(p / 0.65, 0, 1);
+    const targetIndex = clamp(Math.floor(scrubP * (frameCount - 1)), 0, frameCount - 1);
     if (targetIndex !== currentFrameIndex) {
       currentFrameIndex = targetIndex;
       drawFrame(currentFrameIndex);
     }
 
-    // copy + scroll cue
+    // Initial hero copy + scroll cue
     if (heroCopy) {
       heroCopy.style.opacity = clamp(1 - p / 0.1, 0, 1);
       heroCopy.style.transform = `translateY(${p * -40}px)`;
     }
-    if (scrollCue) scrollCue.style.opacity = p > 0.06 ? 0 : 1;
-
-    // Show milestone text "무드를 선택한 카페 검색" when reaching ezgif-frame-179 (index 178)
-    if (milestoneText) {
-      const showMilestone = currentFrameIndex >= 160 && currentFrameIndex <= 220;
-      milestoneText.style.opacity = showMilestone ? '1' : '0';
-      milestoneText.style.transform = showMilestone ? 'translate(-50%, -50%) scale(1)' : 'translate(-50%, -50%) scale(0.9)';
+    if (scrollCue) {
+      const cueOpacity = clamp(1 - p / 0.12, 0, 1);
+      scrollCue.style.opacity = cueOpacity;
+      scrollCue.style.transform = `translate(-50%, ${p * 40}px)`;
     }
 
-    // phone reveal fade in towards bottom of hero scroll
-    const d = clamp((p - 0.7) / 0.3, 0, 1);
-    if (phoneReveal) {
-      phoneReveal.style.opacity = d;
-      phoneReveal.style.transform = `translate(-50%,-40%) scale(${lerp(0.86, 1, d)})`;
+    // Hero End Reveal: phone mockup + text + QR code
+    const revealP = clamp((p - 0.6) / 0.35, 0, 1);
+    if (heroEndReveal) {
+      heroEndReveal.style.opacity = revealP;
+      heroEndReveal.style.transform = `translateY(${lerp(40, 0, revealP)}px)`;
+      heroEndReveal.style.pointerEvents = revealP > 0.5 ? 'auto' : 'none';
     }
   }
 
@@ -165,15 +145,39 @@
   window.addEventListener('scroll', onScroll, { passive: true });
   renderScene(0);
 
-  /* ---------- QR code ---------- */
-  if (window.QRCode){
-    new QRCode(document.getElementById('qrcode'), {
-      text: 'https://moodplace001.vercel.app/',
-      width: 148,
-      height: 148,
-      colorDark: '#1C3B2B',
-      colorLight: '#F7F4EE',
-      correctLevel: QRCode.CorrectLevel.M
-    });
+  /* ---------- QR codes ---------- */
+  function initQRCodes() {
+    if (!window.QRCode) return;
+    
+    const heroQr = document.getElementById('heroEndQr');
+    if (heroQr && heroQr.children.length === 0) {
+      new QRCode(heroQr, {
+        text: 'https://moodplace001.vercel.app/',
+        width: 160,
+        height: 160,
+        colorDark: '#1C3B2B',
+        colorLight: '#F7F4EE',
+        correctLevel: QRCode.CorrectLevel.M
+      });
+    }
+
+    const infoQr = document.getElementById('qrcode');
+    if (infoQr && infoQr.children.length === 0) {
+      new QRCode(infoQr, {
+        text: 'https://moodplace001.vercel.app/',
+        width: 148,
+        height: 148,
+        colorDark: '#1C3B2B',
+        colorLight: '#F7F4EE',
+        correctLevel: QRCode.CorrectLevel.M
+      });
+    }
   }
+
+  if (document.readyState === 'loading') {
+    document.addEventListener('DOMContentLoaded', initQRCodes);
+  } else {
+    initQRCodes();
+  }
+  window.addEventListener('load', initQRCodes);
 })();

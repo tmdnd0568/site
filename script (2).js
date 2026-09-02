@@ -4,6 +4,7 @@
   const heroSticky = document.getElementById('heroSticky');
   const heroCopy = document.getElementById('heroCopy');
   const scrollCue = document.getElementById('scrollCue');
+  const aiSearchCallout = document.getElementById('aiSearchCallout');
 
   /* ---------- Canvas Scroll Scrubbing Engine ---------- */
   const heroCanvas = document.getElementById('heroCanvas');
@@ -113,8 +114,6 @@
   const clamp = (v, min, max) => Math.min(max, Math.max(min, v));
   const lerp = (a, b, t) => a + (b - a) * t;
 
-  const milestoneText = document.getElementById('milestoneText');
-
   /* ---------- scroll-scrubbed sequence ---------- */
   function renderScene(p){
     const targetIndex = clamp(Math.floor(p * (frameCount - 1)), 0, frameCount - 1);
@@ -128,13 +127,18 @@
       heroCopy.style.opacity = clamp(1 - p / 0.1, 0, 1);
       heroCopy.style.transform = `translateY(${p * -40}px)`;
     }
-    if (scrollCue) scrollCue.style.opacity = p > 0.06 ? 0 : 1;
+    if (scrollCue) {
+      const cueOpacity = clamp(1 - p / 0.12, 0, 1);
+      scrollCue.style.opacity = cueOpacity;
+      scrollCue.style.transform = `translate(-50%, ${p * 40}px)`;
+    }
 
-    // Show milestone text "무드를 선택한 카페 검색" when reaching ezgif-frame-179 (index 178)
-    if (milestoneText) {
-      const showMilestone = currentFrameIndex >= 160 && currentFrameIndex <= 220;
-      milestoneText.style.opacity = showMilestone ? '1' : '0';
-      milestoneText.style.transform = showMilestone ? 'translate(-50%, -50%) scale(1)' : 'translate(-50%, -50%) scale(0.9)';
+    // AI search callout box at ezgif-frame-128 (frame index 127)
+    if (aiSearchCallout) {
+      const dist = Math.abs(currentFrameIndex - 127);
+      const calloutAlpha = clamp(1 - dist / 22, 0, 1);
+      aiSearchCallout.style.opacity = calloutAlpha;
+      aiSearchCallout.style.transform = `translate(-50%, -50%) scale(${lerp(0.85, 1, calloutAlpha)})`;
     }
 
     // phone reveal fade in towards bottom of hero scroll
@@ -167,13 +171,16 @@
 
   /* ---------- QR code ---------- */
   if (window.QRCode){
-    new QRCode(document.getElementById('qrcode'), {
-      text: 'https://moodplace001.vercel.app/',
-      width: 148,
-      height: 148,
-      colorDark: '#1C3B2B',
-      colorLight: '#F7F4EE',
-      correctLevel: QRCode.CorrectLevel.M
-    });
+    const heroQr = document.getElementById('heroEndQr');
+    if (heroQr && heroQr.children.length === 0) {
+      new QRCode(heroQr, {
+        text: 'https://moodplace001.vercel.app/',
+        width: 160,
+        height: 160,
+        colorDark: '#1C3B2B',
+        colorLight: '#F7F4EE',
+        correctLevel: QRCode.CorrectLevel.M
+      });
+    }
   }
 })();
