@@ -174,10 +174,89 @@
     }
   }
 
+  /* ---------- Features Section Scroll Reveal Observer ---------- */
+  function initScrollReveal() {
+    const revealRows = document.querySelectorAll('[data-reveal]');
+    if (!revealRows.length) return;
+
+    const observer = new IntersectionObserver((entries) => {
+      entries.forEach((entry) => {
+        if (entry.isIntersecting) {
+          entry.target.classList.add('is-visible');
+        }
+      });
+    }, {
+      threshold: 0.15
+    });
+
+    revealRows.forEach((row) => observer.observe(row));
+  }
+
+  /* ---------- UI/UX Screen Gallery Horizontal Drag & Wheel & Button Controller ---------- */
+  function initGalleryControls() {
+    const gallery = document.getElementById('screenGallery');
+    const prevBtn = document.getElementById('galleryPrevBtn');
+    const nextBtn = document.getElementById('galleryNextBtn');
+    if (!gallery) return;
+
+    // 1. Mouse Drag to Scroll
+    let isDown = false;
+    let startX;
+    let scrollLeft;
+
+    gallery.addEventListener('mousedown', (e) => {
+      isDown = true;
+      startX = e.pageX - gallery.offsetLeft;
+      scrollLeft = gallery.scrollLeft;
+    });
+    gallery.addEventListener('mouseleave', () => { isDown = false; });
+    gallery.addEventListener('mouseup', () => { isDown = false; });
+    gallery.addEventListener('mousemove', (e) => {
+      if (!isDown) return;
+      e.preventDefault();
+      const x = e.pageX - gallery.offsetLeft;
+      const walk = (x - startX) * 2; // scroll speed
+      gallery.scrollLeft = scrollLeft - walk;
+    });
+
+    // 2. Mouse Wheel vertical to horizontal smooth scroll
+    gallery.addEventListener('wheel', (e) => {
+      if (e.deltaY !== 0) {
+        e.preventDefault();
+        gallery.scrollBy({
+          left: e.deltaY * 1.5,
+          behavior: 'smooth'
+        });
+      }
+    }, { passive: false });
+
+    // 3. Arrow buttons navigation
+    if (prevBtn) {
+      prevBtn.addEventListener('click', () => {
+        gallery.scrollBy({ left: -260, behavior: 'smooth' });
+      });
+    }
+    if (nextBtn) {
+      nextBtn.addEventListener('click', () => {
+        gallery.scrollBy({ left: 260, behavior: 'smooth' });
+      });
+    }
+  }
+
   if (document.readyState === 'loading') {
-    document.addEventListener('DOMContentLoaded', initQRCodes);
+    document.addEventListener('DOMContentLoaded', () => {
+      initQRCodes();
+      initScrollReveal();
+      initGalleryControls();
+    });
   } else {
     initQRCodes();
+    initScrollReveal();
+    initGalleryControls();
   }
-  window.addEventListener('load', initQRCodes);
+  window.addEventListener('load', () => {
+    initQRCodes();
+    initScrollReveal();
+    initGalleryControls();
+  });
 })();
