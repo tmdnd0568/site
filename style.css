@@ -744,11 +744,14 @@ img{ max-width: 100%; display:block; }
   scroll-snap-align: center;
   display: flex;
   flex-direction: column;
+  justify-content: space-between;
   align-items: center;
 }
 
 .screen-gallery img{
   width: 100%;
+  aspect-ratio: 9 / 19.5;
+  object-fit: cover;
   border-radius: 28px;
   background: var(--surface);
   border: 1px solid var(--line);
@@ -758,12 +761,12 @@ img{ max-width: 100%; display:block; }
 }
 
 .screen-gallery figure:hover img {
-  transform: translateY(-8px) scale(1.03);
+  transform: translateY(-6px) scale(1.02);
   box-shadow: 0 28px 55px -18px rgba(28, 59, 43, 0.45);
 }
 
 .screen-gallery figcaption{
-  margin-top: 14px;
+  margin-top: 16px;
   font-size: 14px;
   font-weight: 600;
   color: var(--primary);
