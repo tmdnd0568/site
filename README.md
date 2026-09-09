@@ -79,13 +79,6 @@ AI가 제안한 초안 중 실제 서비스 방향과 맞지 않는 항목은 �
 | UI/UX 갤러리 이미지 비율 깨짐 | 이미지 aspect-ratio 미지정 | aspect ratio 및 정렬 값 수정 |
 | Hero 스크롤 유도가 약함 | 스크롤 큐 UI 부재 | 히어로 스크롤 유도 UI 개선 |
 
-## 🚀 실행 방법
-```bash
-git clone https://github.com/tmdnd0568/site.git
-cd site  
-node server.js
-```
-또는 `index.html`을 브라우저로 직접 열어 정적으로 확인할 수 있습니다.
+#🧷링크
+배포주소:https://tmdnd0568.github.io/site/
 
-## 📄 라이선스
-MIT
