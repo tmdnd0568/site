@@ -80,5 +80,5 @@ AI가 제안한 초안 중 실제 서비스 방향과 맞지 않는 항목은 �
 | Hero 스크롤 유도가 약함 | 스크롤 큐 UI 부재 | 히어로 스크롤 유도 UI 개선 |
 
 #🧷링크
-배포주소:https://tmdnd0568.github.io/site/
+- 배포주소:https://tmdnd0568.github.io/site/
 
