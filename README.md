@@ -13,7 +13,8 @@
 ## 🖼️ 데모
 | Hero 스크롤 인터랙션 | Features 섹션 | UI/UX 화면 갤러리 |
 |---|---|---|
-| (스크린샷 삽입) | (스크린샷 삽입) | (스크린샷 삽입) |
+| <img width="1906" height="917" alt="image" src="https://github.com/user-attachments/assets/faf11a81-a05a-444c-b452-3a3cc008d886" /> | <img width="1914" height="917" alt="image" src="https://github.com/user-attachments/assets/6e39a6f0-90d6-4c8b-b4bd-8a6f6d24c4d1" /> | <img width="1916" height="873" alt="image" src="https://github.com/user-attachments/assets/10aa077d-c4ea-4f73-a043-5540e615f331" />
+ |
 
 배포 링크: https://tmdnd0568.github.io/site/ · 소개 대상 앱: https://moodplace001.vercel.app/
 
